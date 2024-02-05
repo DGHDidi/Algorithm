@@ -1,2 +1,1 @@
-# Algorithm
-Algorithm
+# Algorithm Templates
