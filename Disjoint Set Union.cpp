@@ -12,6 +12,7 @@ struct DSU {
             return false;
         }
         fa[x] = y, siz[y] += siz[x];
+        return true;
     }
     bool same(int x, int y) {
         return find(x) == find(y);
