@@ -34,10 +34,9 @@ struct LazySegmentTree {
     void pull(int now) {
         tree[now] = tree[now << 1] + tree[now << 1 | 1];
     }
-    void push(int now, int l, int r) {
-        int mid = (l + r) >> 1;
-        tree[now << 1].apply(lazy[now], l, mid), tree[now << 1 | 1].apply(lazy[now], mid + 1, r);
-        lazy[now << 1].apply(lazy[now], l, mid), lazy[now << 1 | 1].apply(lazy[now], mid + 1, r);
+    void push(int now) {
+        tree[now << 1].apply(lazy[now]), tree[now << 1 | 1].apply(lazy[now]);
+        lazy[now << 1].apply(lazy[now]), lazy[now << 1 | 1].apply(lazy[now]);
         lazy[now] = Tag();
     }
     void modify(int now, int l, int r, int pos, const Info &v) {
@@ -45,7 +44,7 @@ struct LazySegmentTree {
             tree[now] = v;
             return;
         }
-        push(now, l, r);
+        push(now);
         int mid = (l + r) >> 1;
         if (pos <= mid) {
             modify(now << 1, l, mid, pos, v);
@@ -61,7 +60,7 @@ struct LazySegmentTree {
         if (x <= l && r <= y) {
             return tree[now];
         }
-        push(now, l, r);
+        push(now);
         int mid = (l + r) >> 1;
         Info res = Info();
         if (x <= mid) {
@@ -77,11 +76,11 @@ struct LazySegmentTree {
     }
     void rangeApply(int now, int l, int r, int x, int y, const Tag &v) {
         if (x <= l && r <= y) {
-            tree[now].apply(v, l, r);
-            lazy[now].apply(v, l, r);
+            tree[now].apply(v);
+            lazy[now].apply(v);
             return;
         }
-        push(now, l, r);
+        push(now);
         int mid = (l + r) >> 1;
         if (x <= mid) {
             rangeApply(now << 1, l, mid, x, y, v);
