@@ -1,17 +1,17 @@
 struct SCC {
     int n, idx = 0, scc_cnt = 0;
-    vector<vector<int>> G;
+    vector<int> scc_id;
+    vector<vector<int>> G, scc;
 
-    SCC(int _n) : n(_n + 1), G(_n + 1) {}
+    SCC(int _n) : n(_n + 1), scc_id(_n + 1), G(_n + 1), scc(_n + 1) {}
 
     void add_edge(int u, int v) {
         G[u].push_back(v);
     }
 
-    vector<vector<int>> scc() {
-        vector<int> ord(n, -1), low(n), scc_id(n), on_stack(n);;
+    void build() {
+        vector<int> ord(n, -1), low(n), on_stack(n);
         stack<int> stk;
-        vector<vector<int>> scc;
         function<void(int)> dfs = [&](int u) -> void {
             ord[u] = low[u] = idx++;
             stk.push(u), on_stack[u] = true;
@@ -42,6 +42,13 @@ struct SCC {
                 dfs(i);
             }
         }
+    }
+
+    int id(int u) {
+        return scc_id[u];
+    }
+
+    vector<vector<int>> groups() {
         return scc;
     }
 };
