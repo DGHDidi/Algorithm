@@ -98,6 +98,9 @@ struct LazySegmentTree {
         if (l == r) {
             return check(tree[now]) ? l : -1;
         }
+        if (!check(tree[now])) {
+            return -1;
+        }
         push(now, l, r);
         int mid = (l + r) >> 1;
         int res = findFirst(now << 1, l, mid, x, y, check);
@@ -114,6 +117,9 @@ struct LazySegmentTree {
     int findLast(int now, int l, int r, int x, int y, F check) {
         if (l == r) {
             return check(tree[now]) ? l : -1;
+        }
+        if (!check(tree[now])) {
+            return -1;
         }
         push(now, l, r);
         int mid = (l + r) >> 1;
