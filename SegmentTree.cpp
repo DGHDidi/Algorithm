@@ -70,6 +70,9 @@ struct SegmentTree {
         if (l == r) {
             return check(tree[now]) ? l : -1;
         }
+        if (!check(tree[now])) {
+            return -1;
+        }
         int mid = (l + r) >> 1;
         int res = findFirst(now << 1, l, mid, x, y, check);
         if (res == -1) {
@@ -85,6 +88,9 @@ struct SegmentTree {
     int findLast(int now, int l, int r, int x, int y, F check) {
         if (l == r) {
             return check(tree[now]) ? l : -1;
+        }
+        if (!check(tree[now])) {
+            return -1;
         }
         int mid = (l + r) >> 1;
         int res = findLast(now << 1 | 1, mid + 1, r, x, y, check);
