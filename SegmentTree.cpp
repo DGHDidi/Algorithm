@@ -66,41 +66,47 @@ struct SegmentTree {
         return rangeQuery(1, 0, n, l, r);
     }
     template<class F>
-    int findFirst(int now, int l, int r, int x, int y, F check) {
-        if (l == r) {
-            return check(tree[now]) ? l : -1;
-        }
-        if (!check(tree[now])) {
+    int findFirst(int now, int l, int r, int x, int y, F &&pred) {
+        if (l > y || r < x) {
             return -1;
         }
+        if (l >= x && r <= y && !pred(tree[now])) {
+            return -1;
+        }
+        if (l == r) {
+            return l;
+        }
         int mid = (l + r) >> 1;
-        int res = findFirst(now << 1, l, mid, x, y, check);
+        int res = findFirst(now << 1, l, mid, x, y, pred);
         if (res == -1) {
-            res = findFirst(now << 1 | 1, mid + 1, r, x, y, check);
+            res = findFirst(now << 1 | 1, mid + 1, r, x, y, pred);
         }
         return res;
     }
     template<class F>
-    int findFirst(int l, int r, F check) {
-        return findFirst(1, 0, n, l, r, check);
+    int findFirst(int l, int r, F &&pred) {
+        return findFirst(1, 0, n, l, r, pred);
     }
     template<class F>
-    int findLast(int now, int l, int r, int x, int y, F check) {
-        if (l == r) {
-            return check(tree[now]) ? l : -1;
-        }
-        if (!check(tree[now])) {
+    int findLast(int now, int l, int r, int x, int y, F &&pred) {
+        if (l > y || r < x) {
             return -1;
         }
+        if (l >= x && r <= y && !pred(tree[now])) {
+            return -1;
+        }
+        if (l == r) {
+            return l;
+        }
         int mid = (l + r) >> 1;
-        int res = findLast(now << 1 | 1, mid + 1, r, x, y, check);
+        int res = findFirst(now << 1 | 1, mid + 1, r, x, y, pred);
         if (res == -1) {
-            res = findLast(now << 1, l, mid, x, y, check);
+            res = findFirst(now << 1, l, mid, x, y, pred);
         }
         return res;
     }
     template<class F>
-    int findLast(int l, int r, F check) {
-        return findLast(1, 0, n, l, r, check);
+    int findLast(int l, int r, F &&pred) {
+        return findLast(1, 0, n, l, r, pred);
     }
 };
