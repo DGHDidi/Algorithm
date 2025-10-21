@@ -6,6 +6,7 @@ bool btw(int x, int l, int r) {
     }
 }
 
+// (al -> bl) (ar -> br)  不能相遇
 int solve(int al, int ar, int bl, int br) {
     if (al == ar || bl == br) {
         return INF;
