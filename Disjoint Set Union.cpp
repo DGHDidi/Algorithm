@@ -11,10 +11,16 @@ struct DSU {
         if (x == y) {
             return false;
         }
+        if (siz[x] > siz[y]) {
+            swap(x, y);
+        }
         fa[x] = y, siz[y] += siz[x];
         return true;
     }
     bool same(int x, int y) {
         return find(x) == find(y);
+    }
+    int size(int x) {
+        return siz[find(x)];
     }
 };
