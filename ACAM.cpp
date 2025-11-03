@@ -4,6 +4,9 @@ struct AC {
     vector<int> fail, pat, deg;
     vector<array<int, ALP>> nxt;
 
+    vector<int> freq;   // 有多少插入的模式恰好在该节点结束
+    vector<i64> out;    // 即以该状态为结尾的所有模式数量（包含 fail 链）
+
     AC() { clear(); }
 
     int newNode() {
@@ -55,9 +58,13 @@ struct AC {
             }
         }
 
+        vector<int> ord;
+        ord.push_back(0);
+
         while (!q.empty()) {
             int u = q.front();
             q.pop();
+            ord.push_back(u);
             for (int c = 0; c < ALP; c++) {
                 int v = nxt[u][c];
                 if (v != -1) {
@@ -69,8 +76,20 @@ struct AC {
                 }
             }
         }
+
+        freq.assign(nodes, 0);
+        for (int i = 1; i <= tot; i++) {
+            freq[pat[i]]++;
+        }
+
+        out.assign(nodes, 0);
+        for (int u : ord) {
+            out[u] += freq[u];
+            if (u != 0) out[u] += out[fail[u]];
+        }
     }
 
+    // 每个模式串出现了多少次  O(|Text| + Nodes)
     vector<i64> query(const string &text) {
         vector<bool> vis(nodes, false);
         vector<i64> cnt(nodes, 0);
@@ -112,5 +131,20 @@ struct AC {
         }
 
         return res;
+    }
+
+    // 所有模式串的总出现次数 O(|text|)
+    i64 query_tot(const string &text) const {
+        int u = 0;
+        i64 ans = 0;
+        for (char ch : text) {
+            int c = ch - 'a';
+            if (c < 0 || c >= ALP) {
+                throw runtime_error("Invalid character");
+            }
+            u = nxt[u][c];
+            ans += out[u];
+        }
+        return ans;
     }
 } ac;
